@@ -2,32 +2,60 @@
 # Imports
 #----------------------------------------------------------------------------#
 
-import sys
 import json
-import logging
-from logging import FileHandler, Formatter
-
-import babel
 import dateutil.parser
-from flask import (Flask, Response, flash, redirect, render_template, request,
-                   url_for, abort, jsonify)
-from flask_migrate import Migrate
+import babel
+from flask import Flask, render_template, request, Response, flash, redirect, url_for
+from flask_moment import Moment
 from flask_sqlalchemy import SQLAlchemy
+import logging
+from logging import Formatter, FileHandler
 from flask_wtf import Form
-
-from connection import app, db, moment
 from forms import *
-from models import Artist, Show, Venue
-
 #----------------------------------------------------------------------------#
 # App Config.
 #----------------------------------------------------------------------------#
 
-#app = Flask(__name__)
-#moment = Moment(app)
-migrate = Migrate(app, db)
+app = Flask(__name__)
+moment = Moment(app)
+app.config.from_object('config')
+db = SQLAlchemy(app)
 
-# TODO: DONE connect to a local postgresql database
+# TODO: connect to a local postgresql database
+
+#----------------------------------------------------------------------------#
+# Models.
+#----------------------------------------------------------------------------#
+
+class Venue(db.Model):
+    __tablename__ = 'Venue'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String)
+    city = db.Column(db.String(120))
+    state = db.Column(db.String(120))
+    address = db.Column(db.String(120))
+    phone = db.Column(db.String(120))
+    image_link = db.Column(db.String(500))
+    facebook_link = db.Column(db.String(120))
+
+    # TODO: implement any missing fields, as a database migration using Flask-Migrate
+
+class Artist(db.Model):
+    __tablename__ = 'Artist'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String)
+    city = db.Column(db.String(120))
+    state = db.Column(db.String(120))
+    phone = db.Column(db.String(120))
+    genres = db.Column(db.String(120))
+    image_link = db.Column(db.String(500))
+    facebook_link = db.Column(db.String(120))
+
+    # TODO: implement any missing fields, as a database migration using Flask-Migrate
+
+# TODO Implement Show and Artist models, and complete all model relationships and properties, as a database migration.
 
 #----------------------------------------------------------------------------#
 # Filters.
@@ -36,7 +64,7 @@ migrate = Migrate(app, db)
 def format_datetime(value, format='medium'):
   date = dateutil.parser.parse(value)
   if format == 'full':
-      format="EEEE, MMMM d, y 'at' h:mma"
+      format="EEEE MMMM, d, y 'at' h:mma"
   elif format == 'medium':
       format="EE MM, dd, y h:mma"
   return babel.dates.format_datetime(date, format, locale='en')
@@ -84,7 +112,7 @@ def venues():
 
 @app.route('/venues/search', methods=['POST'])
 def search_venues():
-  # TODO: implement search on venues with partial string search. Ensure it is case-insensitive.
+  # TODO: implement search on artists with partial string search. Ensure it is case-insensitive.
   # seach for Hop should return "The Musical Hop".
   # search for "Music" should return "The Musical Hop" and "Park Square Live Music & Coffee"
   response={
@@ -385,31 +413,15 @@ def create_artist_form():
 @app.route('/artists/create', methods=['POST'])
 def create_artist_submission():
   # called upon submitting the new artist listing form
-  error = False
-  body = {}
   # TODO: insert form data as a new Venue record in the db, instead
-  try:
-    name = request.form['name']
-    city = request.form['city']
-    state = request.form['state']
-  except:
-    error = True
-    db.session.rollback()
-    flash('Uh-oh, something went wrong!')
-  finally:
-    db.session.close()
-  if error:
-    abort(500)
-  else:
-    flash('Artist ' + request.form['name'] + ' was successfully listed!')
-    return jsonify(body)
-
   # TODO: modify data to be the data object returned from db insertion
+
   # on successful db insert, flash success
+  flash('Artist ' + request.form['name'] + ' was successfully listed!')
   # TODO: on unsuccessful db insert, flash an error instead.
   # e.g., flash('An error occurred. Artist ' + data.name + ' could not be listed.')
-  #return redirect(url_for('create_artist_submission'))
-#  return render_template('pages/home.html')
+  return render_template('pages/home.html')
+
 
 #  Shows
 #  ----------------------------------------------------------------
