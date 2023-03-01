@@ -9,3 +9,5 @@ Flask_WTF==0.14.3
 python_dateutil==2.8.2
 SQLAlchemy==1.4.0
 WTForms==3.0.1
+Werzkeug==2.0.0
+jinja2==3.0
