@@ -80,4 +80,4 @@ class Genre(Enum):
 
     @classmethod
     def choices(cls):
-        return[(c.name, c.value) for c in cls]
+        return[(choice.name, choice.value) for choice in cls]

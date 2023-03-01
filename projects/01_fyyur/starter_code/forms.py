@@ -78,8 +78,6 @@ class VenueForm(Form):
         'seeking_description'
     )
 
-
-
 class ArtistForm(Form):
     name = StringField(
         'name', validators=[DataRequired()]

@@ -9,6 +9,11 @@
 			<i class="fas fa-music"></i>
 			<div class="item">
 				<h5>{{ venue.name }}</h5>
+				{% if venue.num_upcoming_shows == 1 %}
+						<p>{{ venue.num_upcoming_shows }} upcoming show</p>
+					{% else %}
+						<p>{{ venue.num_upcoming_shows }} upcoming shows</p>
+					{% endif %}
 			</div>
 		</a>
 	</li>
